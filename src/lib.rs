@@ -44,20 +44,21 @@ impl Trust {
         self.balances.insert(&account_id, &balance);
     }
 
-    pub fn play(&mut self, opt: u8, opt_bal: u128) -> u8 {
+    pub fn play(&mut self, opt_bal: u128) -> bool {
         let account_id = env::signer_account_id();
         let mut credits = self.balances.get(&account_id).unwrap_or(0);
         assert!(credits > 0, "no credits to play");
 
-        let rng:u8 = *env::random_seed().get(0).unwrap() % 2;
+        let rng:u8 = *env::random_seed().get(0).unwrap() % 100;
 
         let acc_balance = 0;
         self.balances.insert(&account_id, &acc_balance);
-        if rng == opt {
+        if rng < 45 {
             credits += opt_bal * ONE_NEAR * 965 / 100000;
             Promise::new(account_id).transfer(credits);
+            return true;
         }
-        return rng;
+        return false;
     }
 
     pub fn get_balance(&self, account_id: AccountId) -> U128 {
