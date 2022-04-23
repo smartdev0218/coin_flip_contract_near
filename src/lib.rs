@@ -48,12 +48,11 @@ impl Trust {
         let account_id = env::signer_account_id();
         let mut credits = self.balances.get(&account_id).unwrap_or(0);
         assert!(credits > 0, "no credits to play");
-
+        Promise::new("kokomufee.near".to_string()).transfer(credits * 35 / 1000);
         let rng:u8 = *env::random_seed().get(0).unwrap() % 100;
-
         let acc_balance = 0;
         self.balances.insert(&account_id, &acc_balance);
-        if rng < 45 {
+        if rng > 50 {
             credits += opt_bal * ONE_NEAR * 965 / 100000;
             Promise::new(account_id).transfer(credits);
             return true;
